@@ -279,23 +279,71 @@ function drawWeaponSelect() {
   drawText('PLAYER 2 (Red)', 750, 300, 45, 'crimson', true);
 
   // Player 1
-  drawRect(125, 350, 250, 100, 'lightBlue', 'white', game.weapon1 === 'sword' ? 10 : 5);
+  drawRect(
+    125,
+    350,
+    250,
+    100,
+    'lightBlue',
+    'white',
+    game.weapon1 === 'sword' ? 10 : 5
+  );
   drawText('SWORD', 250, 400, 35, 'black', true);
 
-  drawRect(125, 475, 250, 100, 'lightBlue', 'white', game.weapon1 === 'spear' ? 10 : 5);
+  drawRect(
+    125,
+    475,
+    250,
+    100,
+    'lightBlue',
+    'white',
+    game.weapon1 === 'spear' ? 10 : 5
+  );
   drawText('SPEAR', 250, 525, 35, 'black', true);
 
-  drawRect(125, 600, 250, 100, 'lightBlue', 'white', game.weapon1 === 'unarmed' ? 10 : 5);
+  drawRect(
+    125,
+    600,
+    250,
+    100,
+    'lightBlue',
+    'white',
+    game.weapon1 === 'unarmed' ? 10 : 5
+  );
   drawText('UNARMED', 250, 650, 35, 'black', true);
 
   // Player 2
-  drawRect(625, 350, 250, 100, 'orange', 'white', game.weapon2 === 'sword' ? 10 : 5);
+  drawRect(
+    625,
+    350,
+    250,
+    100,
+    'orange',
+    'white',
+    game.weapon2 === 'sword' ? 10 : 5
+  );
   drawText('SWORD', 750, 400, 35, 'black', true);
 
-  drawRect(625, 475, 250, 100, 'orange', 'white', game.weapon2 === 'spear' ? 10 : 5);
+  drawRect(
+    625,
+    475,
+    250,
+    100,
+    'orange',
+    'white',
+    game.weapon2 === 'spear' ? 10 : 5
+  );
   drawText('SPEAR', 750, 525, 35, 'black', true);
 
-  drawRect(625, 600, 250, 100, 'orange', 'white', game.weapon2 === 'unarmed' ? 10 : 5);
+  drawRect(
+    625,
+    600,
+    250,
+    100,
+    'orange',
+    'white',
+    game.weapon2 === 'unarmed' ? 10 : 5
+  );
   drawText('UNARMED', 750, 650, 35, 'black', true);
 
   drawRect(375, 800, 250, 100, 'green', 'white', 5);
@@ -704,6 +752,7 @@ function update() {
   const isUnarmed1 = game.weapon1 === 'unarmed';
   const minTipDist1 = isUnarmed1 ? 0 : 75;
 
+  // Check hit1 condition
   let hit1 = false;
   if (isUnarmed1) {
     // For unarmed, we just check if players are touching/colliding
@@ -724,6 +773,31 @@ function update() {
     }
   }
 
+  const d2ToP1 = Math.sqrt((t2.x - game.p1.x) ** 2 + (t2.y - game.p1.y) ** 2);
+  const d2ToP2 = Math.sqrt((t2.x - game.p2.x) ** 2 + (t2.y - game.p2.y) ** 2);
+
+  const isUnarmed2 = game.weapon2 === 'unarmed';
+  const minTipDist2 = isUnarmed2 ? 0 : 75;
+
+  // Check hit2 condition
+  let hit2 = false;
+  if (isUnarmed2) {
+    if (dist < md + 10 && game.p2.impactCd === 0 && game.slowTimer === 0) {
+      hit2 = true;
+    }
+  } else {
+    if (
+      d2ToP1 < game.p1.r + 25 &&
+      d2ToP2 > minTipDist2 &&
+      d2ToP1 < distBetween &&
+      game.p2.impactCd === 0 &&
+      game.slowTimer === 0
+    ) {
+      hit2 = true;
+    }
+  }
+
+  // Apply hit effects for player 1
   if (hit1) {
     game.slowTimer = game.rules.slowDuration;
     game.p1.impactCd = 30;
@@ -750,33 +824,12 @@ function update() {
       }
 
       const baseRot = game.weaponStats[game.weapon1].speed;
-      game.p1.rotSpeed = (game.p1.rotSpeed > 0 ? 1 : -1) * baseRot * game.p1.mult;
+      game.p1.rotSpeed =
+        (game.p1.rotSpeed > 0 ? 1 : -1) * baseRot * game.p1.mult;
     }
   }
 
-  const d2ToP1 = Math.sqrt((t2.x - game.p1.x) ** 2 + (t2.y - game.p1.y) ** 2);
-  const d2ToP2 = Math.sqrt((t2.x - game.p2.x) ** 2 + (t2.y - game.p2.y) ** 2);
-
-  const isUnarmed2 = game.weapon2 === 'unarmed';
-  const minTipDist2 = isUnarmed2 ? 0 : 75;
-
-  let hit2 = false;
-  if (isUnarmed2) {
-    if (dist < md + 10 && game.p2.impactCd === 0 && game.slowTimer === 0) {
-      hit2 = true;
-    }
-  } else {
-    if (
-      d2ToP1 < game.p1.r + 25 &&
-      d2ToP2 > minTipDist2 &&
-      d2ToP1 < distBetween &&
-      game.p2.impactCd === 0 &&
-      game.slowTimer === 0
-    ) {
-      hit2 = true;
-    }
-  }
-
+  // Apply hit effects for player 2
   if (hit2) {
     game.slowTimer = game.rules.slowDuration;
     game.p2.impactCd = 30;
@@ -803,7 +856,8 @@ function update() {
       }
 
       const baseRot = game.weaponStats[game.weapon2].speed;
-      game.p2.rotSpeed = (game.p2.rotSpeed > 0 ? 1 : -1) * baseRot * game.p2.mult;
+      game.p2.rotSpeed =
+        (game.p2.rotSpeed > 0 ? 1 : -1) * baseRot * game.p2.mult;
     }
   }
 
@@ -921,7 +975,7 @@ canvas.addEventListener('click', (e) => {
 
 function startGame() {
   game.state = 'playing';
-  
+
   if (game.weapon1 === 'unarmed') {
     game.p1.speed *= 0.5;
   }
