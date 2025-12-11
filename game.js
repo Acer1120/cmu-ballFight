@@ -90,6 +90,8 @@ const game = {
   swordCd: 0,
   started: false,
   winner: null,
+  editingRule: null,
+  inputValue: '',
 };
 
 function rulesConfig() {
@@ -246,27 +248,31 @@ function drawRules() {
   );
 
   const settings = rulesConfig();
-  const startY = 200;
-  const rowH = 90;
+  const startY = 180;
+  const rowH = 80;
 
   settings.forEach((s, i) => {
     const y = startY + i * rowH;
     drawRect(120, y - 25, 760, 70, 'rgba(0,0,0,0.25)', 'white', 2);
-    drawText(s.label, 200, y + 10, 26, 'white', true, 'left');
-    drawText(s.desc, 200, y + 38, 18, 'lightGray', false, 'left');
+    drawText(s.label, 200, y - 5, 26, 'white', true, 'left');
+    drawText(s.desc, 200, y + 25, 18, 'lightGray', false, 'left');
 
     drawRect(640, y - 15, 60, 50, 'crimson', 'white', 3);
     drawText('-', 670, y + 10, 36, 'white', true);
 
     drawRect(720, y - 15, 110, 50, 'black', 'white', 2);
-    drawText(
-      game.rules[s.id].toFixed(2).replace(/\.00$/, ''),
-      775,
-      y + 10,
-      26,
-      'yellow',
-      true
-    );
+    if (game.editingRule === s.id) {
+      drawText(game.inputValue + '_', 775, y + 10, 26, 'yellow', true);
+    } else {
+      drawText(
+        game.rules[s.id].toFixed(2).replace(/\.00$/, ''),
+        775,
+        y + 10,
+        26,
+        'yellow',
+        true
+      );
+    }
 
     drawRect(850, y - 15, 60, 50, 'green', 'white', 3);
     drawText('+', 880, y + 10, 36, 'white', true);
@@ -570,12 +576,17 @@ function drawGame() {
 
   drawAbilityCooldowns();
 
+  if (!game.started && !game.winner) {
+    drawText('PRESS ANY KEY TO START', 500, 500, 60, 'white', true);
+  }
+
   if (game.winner) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     ctx.fillRect(0, 0, 1000, 1000);
     const wt = game.winner === 1 ? 'PLAYER 1 WINS!' : 'PLAYER 2 WINS!';
     const wc = game.winner === 1 ? 'dodgerBlue' : 'crimson';
-    drawText(wt, 500, 500, 80, wc, true);
+    drawText(wt, 500, 450, 80, wc, true);
+    drawText('Press SPACE to play again', 500, 550, 40, 'white');
   }
 }
 
@@ -802,17 +813,35 @@ canvas.addEventListener('click', (e) => {
   const y = e.clientY - rect.top;
 
   if (game.state === 'rules') {
+    if (game.editingRule) {
+      const val = parseFloat(game.inputValue);
+      if (!isNaN(val)) {
+        game.rules[game.editingRule] = val;
+        syncPlayersWithRules();
+      }
+    }
+
     const settings = rulesConfig();
-    const startY = 200;
-    const rowH = 90;
+    const startY = 180;
+    const rowH = 80;
     settings.forEach((s, i) => {
       const yStart = startY + i * rowH - 25;
       const yEnd = yStart + 70;
       if (y >= yStart && y <= yEnd) {
         if (640 <= x && x <= 700) adjustRule(s.id, -1);
         else if (850 <= x && x <= 910) adjustRule(s.id, 1);
+        else if (720 <= x && x <= 830) {
+          if (game.editingRule !== s.id) {
+            game.editingRule = s.id;
+            game.inputValue = '';
+          }
+        }
       }
     });
+
+    if (game.editingRule && !(720 <= x && x <= 830)) {
+      game.editingRule = null;
+    }
 
     if (375 <= x && x <= 625 && 820 <= y && y <= 890) {
       syncPlayersWithRules();
@@ -943,9 +972,27 @@ function resetGame() {
   game.swordCd = 0;
   game.started = false;
   game.winner = null;
+  game.editingRule = null;
+  game.inputValue = '';
 }
 
 document.addEventListener('keydown', (e) => {
+  if (game.editingRule) {
+    if (e.key === 'Enter') {
+      const val = parseFloat(game.inputValue);
+      if (!isNaN(val)) {
+        game.rules[game.editingRule] = val;
+        syncPlayersWithRules();
+      }
+      game.editingRule = null;
+    } else if (e.key === 'Backspace') {
+      game.inputValue = game.inputValue.slice(0, -1);
+    } else if (e.key.length === 1) {
+      game.inputValue += e.key;
+    }
+    return;
+  }
+
   if (game.state === 'start' && e.code === 'Space') {
     game.state = 'rules';
   } else if (game.state === 'playing' && !game.winner) {
