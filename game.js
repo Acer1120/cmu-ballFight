@@ -833,29 +833,6 @@ function update() {
     }
   }
 
-  const d2ToP1 = Math.sqrt((t2.x - game.p1.x) ** 2 + (t2.y - game.p1.y) ** 2);
-  const d2ToP2 = Math.sqrt((t2.x - game.p2.x) ** 2 + (t2.y - game.p2.y) ** 2);
-
-  const isUnarmed2 = game.weapon2 === 'unarmed';
-  const minTipDist2 = isUnarmed2 ? 0 : 75;
-
-  let hit2 = false;
-  if (isUnarmed2) {
-    if (dist < md + 10 && game.p2.impactCd === 0 && game.slowTimer === 0) {
-      hit2 = true;
-    }
-  } else {
-    if (
-      d2ToP1 < game.p1.r + 25 &&
-      d2ToP2 > minTipDist2 &&
-      d2ToP1 < distBetween &&
-      game.p2.impactCd === 0 &&
-      game.slowTimer === 0
-    ) {
-      hit2 = true;
-    }
-  }
-
   // Apply hit effects for player 2
   if (hit2) {
     game.slowTimer = game.rules.slowDuration;
