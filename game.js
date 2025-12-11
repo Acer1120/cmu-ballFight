@@ -31,7 +31,7 @@ const game = {
     vx: 0,
     vy: 0,
     speed: 5.5,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: 100,
     mult: 1.0,
@@ -61,7 +61,7 @@ const game = {
     vx: 0,
     vy: 0,
     speed: 5.5,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: 100,
     mult: 1.0,
@@ -826,6 +826,33 @@ function update() {
       const baseRot = game.weaponStats[game.weapon1].speed;
       game.p1.rotSpeed =
         (game.p1.rotSpeed > 0 ? 1 : -1) * baseRot * game.p1.mult;
+
+      // Reset chase/flee cooldowns on successful hit
+      game.p1.chaseCd = 0;
+      game.p1.fleeCd = 0;
+    }
+  }
+
+  const d2ToP1 = Math.sqrt((t2.x - game.p1.x) ** 2 + (t2.y - game.p1.y) ** 2);
+  const d2ToP2 = Math.sqrt((t2.x - game.p2.x) ** 2 + (t2.y - game.p2.y) ** 2);
+
+  const isUnarmed2 = game.weapon2 === 'unarmed';
+  const minTipDist2 = isUnarmed2 ? 0 : 75;
+
+  let hit2 = false;
+  if (isUnarmed2) {
+    if (dist < md + 10 && game.p2.impactCd === 0 && game.slowTimer === 0) {
+      hit2 = true;
+    }
+  } else {
+    if (
+      d2ToP1 < game.p1.r + 25 &&
+      d2ToP2 > minTipDist2 &&
+      d2ToP1 < distBetween &&
+      game.p2.impactCd === 0 &&
+      game.slowTimer === 0
+    ) {
+      hit2 = true;
     }
   }
 
@@ -858,6 +885,10 @@ function update() {
       const baseRot = game.weaponStats[game.weapon2].speed;
       game.p2.rotSpeed =
         (game.p2.rotSpeed > 0 ? 1 : -1) * baseRot * game.p2.mult;
+
+      // Reset chase/flee cooldowns on successful hit
+      game.p2.chaseCd = 0;
+      game.p2.fleeCd = 0;
     }
   }
 
@@ -976,6 +1007,10 @@ canvas.addEventListener('click', (e) => {
 function startGame() {
   game.state = 'playing';
 
+  // Assign random starting angles
+  game.p1.angle = Math.random() * Math.PI * 2;
+  game.p2.angle = Math.random() * Math.PI * 2;
+
   if (game.weapon1 === 'unarmed') {
     game.p1.speed *= 0.5;
   }
@@ -1001,7 +1036,7 @@ function resetGame() {
     vx: 0,
     vy: 0,
     speed: game.rules.baseSpeed * game.rules.startingMult,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: game.rules.startingHp,
     mult: game.rules.startingMult,
@@ -1032,7 +1067,7 @@ function resetGame() {
     vx: 0,
     vy: 0,
     speed: game.rules.baseSpeed * game.rules.startingMult,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: game.rules.startingHp,
     mult: game.rules.startingMult,
