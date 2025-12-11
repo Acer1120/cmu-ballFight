@@ -31,7 +31,7 @@ const game = {
     vx: 0,
     vy: 0,
     speed: 5.5,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: 100,
     mult: 1.0,
@@ -61,7 +61,7 @@ const game = {
     vx: 0,
     vy: 0,
     speed: 5.5,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: 100,
     mult: 1.0,
@@ -980,6 +980,10 @@ canvas.addEventListener('click', (e) => {
 function startGame() {
   game.state = 'playing';
 
+  // Assign random starting angles
+  game.p1.angle = Math.random() * Math.PI * 2;
+  game.p2.angle = Math.random() * Math.PI * 2;
+
   if (game.weapon1 === 'unarmed') {
     game.p1.speed *= 0.5;
   }
@@ -1005,7 +1009,7 @@ function resetGame() {
     vx: 0,
     vy: 0,
     speed: game.rules.baseSpeed * game.rules.startingMult,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: game.rules.startingHp,
     mult: game.rules.startingMult,
@@ -1036,7 +1040,7 @@ function resetGame() {
     vx: 0,
     vy: 0,
     speed: game.rules.baseSpeed * game.rules.startingMult,
-    angle: 0,
+    angle: Math.random() * Math.PI * 2,
     rotSpeed: 0,
     hp: game.rules.startingHp,
     mult: game.rules.startingMult,
