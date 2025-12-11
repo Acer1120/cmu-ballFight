@@ -743,6 +743,7 @@ function update() {
       if (isUnarmed1) {
         game.p1.unarmedHits++;
         game.p1.speed += 1;
+        game.p1.mult += game.rules.multPerHit;
       } else {
         game.p1.mult += game.rules.multPerHit;
         game.p1.speed = game.rules.baseSpeed * game.p1.mult;
@@ -795,6 +796,7 @@ function update() {
       if (isUnarmed2) {
         game.p2.unarmedHits++;
         game.p2.speed += 1;
+        game.p2.mult += game.rules.multPerHit;
       } else {
         game.p2.mult += game.rules.multPerHit;
         game.p2.speed = game.rules.baseSpeed * game.p2.mult;
