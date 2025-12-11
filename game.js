@@ -611,11 +611,11 @@ function update() {
       'm1cd',
       'm2cd',
     ].forEach((k) => {
-      p[k] = Math.max(0, p[k] - 1);
+      p[k] = Math.max(0, p[k] - sf);
     });
   });
 
-  game.swordCd = Math.max(0, game.swordCd - 1);
+  game.swordCd = Math.max(0, game.swordCd - sf);
 
   [game.p1, game.p2].forEach((p, i) => {
     let spd = p.speed * 1.3;
