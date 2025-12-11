@@ -266,7 +266,7 @@
                 drawRect(25, y, 37, 20, game.p1.chaseCd === 0 ? 'green' : 'red');
                 drawText('Q', 43, y - 20, 22, 'white', true);
                 drawRect(67, y, 37, 20, game.p1.fleeCd === 0 ? 'green' : 'red');
-                drawText('E', 85, y - 20, 22, 'white', true);
+                drawText('W', 85, y - 20, 22, 'white', true);
             } else if (game.ability1 === 'dash') {
                 drawRect(25, y, 75, 20, game.p1.dashCd === 0 ? 'green' : 'red');
                 drawText('Q', 62, y - 20, 25, 'white', true);
@@ -274,27 +274,27 @@
                 drawRect(25, y, 37, 20, game.p1.m1cd === 0 ? 'green' : 'red');
                 drawText('Q', 43, y - 20, 22, 'white', true);
                 drawRect(67, y, 37, 20, game.p1.m2cd === 0 ? 'green' : 'red');
-                drawText('E', 85, y - 20, 22, 'white', true);
+                drawText('W', 85, y - 20, 22, 'white', true);
             }
 
             // Player 2
             if (game.ability2 === 'shield') {
                 drawRect(900, y, 75, 20, game.p2.shieldCd === 0 ? 'green' : 'red');
-                drawText('I', 937, y - 20, 25, 'white', true);
+                drawText('O', 937, y - 20, 25, 'white', true);
             } else if (game.ability2 === 'boost') {
                 drawRect(900, y, 75, 20, game.p2.boostCd === 0 ? 'green' : 'red');
-                drawText('I', 937, y - 20, 25, 'white', true);
+                drawText('O', 937, y - 20, 25, 'white', true);
             } else if (game.ability2 === 'reverse') {
                 drawRect(900, y, 37, 20, game.p2.chaseCd === 0 ? 'green' : 'red');
-                drawText('I', 918, y - 20, 22, 'white', true);
+                drawText('O', 918, y - 20, 22, 'white', true);
                 drawRect(942, y, 37, 20, game.p2.fleeCd === 0 ? 'green' : 'red');
                 drawText('P', 960, y - 20, 22, 'white', true);
             } else if (game.ability2 === 'dash') {
                 drawRect(900, y, 75, 20, game.p2.dashCd === 0 ? 'green' : 'red');
-                drawText('I', 937, y - 20, 25, 'white', true);
+                drawText('O', 937, y - 20, 25, 'white', true);
             } else if (game.ability2 === 'mark') {
                 drawRect(900, y, 37, 20, game.p2.m1cd === 0 ? 'green' : 'red');
-                drawText('I', 918, y - 20, 22, 'white', true);
+                drawText('O', 918, y - 20, 22, 'white', true);
                 drawRect(942, y, 37, 20, game.p2.m2cd === 0 ? 'green' : 'red');
                 drawText('P', 960, y - 20, 22, 'white', true);
             }
@@ -309,8 +309,10 @@
                 ctx.fillRect(0, 0, 1000, 1000);
             }
 
-            drawText(game.weapon1.toUpperCase(), 175, 50, 40, 'dodgerBlue', true);
-            drawText(game.weapon2.toUpperCase(), 825, 50, 40, 'crimson', true);
+            const p1HpTop = Math.max(0, Math.floor(game.p1.hp));
+            const p2HpTop = Math.max(0, Math.floor(game.p2.hp));
+            drawText(`${game.weapon1.toUpperCase()} (${p1HpTop} HP)`, 175, 50, 40, 'dodgerBlue', true);
+            drawText(`${game.weapon2.toUpperCase()} (${p2HpTop} HP)`, 825, 50, 40, 'crimson', true);
 
             // Draw marks
             if (game.p1.m1x !== null) {
