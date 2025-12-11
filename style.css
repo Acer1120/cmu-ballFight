@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: rgb(80, 80, 80);
+  font-family: Arial, sans-serif;
+}
+
+#gameCanvas {
+  border: 2px solid #fff;
+  cursor: pointer;
+}
