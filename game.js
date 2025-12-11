@@ -800,6 +800,10 @@ function update() {
       const baseRot = game.weaponStats[game.weapon1].speed;
       game.p1.rotSpeed =
         (game.p1.rotSpeed > 0 ? 1 : -1) * baseRot * game.p1.mult;
+
+      // Reset chase/flee cooldowns on successful hit
+      game.p1.chaseCd = 0;
+      game.p1.fleeCd = 0;
     }
   }
 
@@ -854,6 +858,10 @@ function update() {
       const baseRot = game.weaponStats[game.weapon2].speed;
       game.p2.rotSpeed =
         (game.p2.rotSpeed > 0 ? 1 : -1) * baseRot * game.p2.mult;
+
+      // Reset chase/flee cooldowns on successful hit
+      game.p2.chaseCd = 0;
+      game.p2.fleeCd = 0;
     }
   }
 
