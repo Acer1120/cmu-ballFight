@@ -279,23 +279,71 @@ function drawWeaponSelect() {
   drawText('PLAYER 2 (Red)', 750, 300, 45, 'crimson', true);
 
   // Player 1
-  drawRect(125, 350, 250, 100, 'lightBlue', 'white', game.weapon1 === 'sword' ? 10 : 5);
+  drawRect(
+    125,
+    350,
+    250,
+    100,
+    'lightBlue',
+    'white',
+    game.weapon1 === 'sword' ? 10 : 5
+  );
   drawText('SWORD', 250, 400, 35, 'black', true);
 
-  drawRect(125, 475, 250, 100, 'lightBlue', 'white', game.weapon1 === 'spear' ? 10 : 5);
+  drawRect(
+    125,
+    475,
+    250,
+    100,
+    'lightBlue',
+    'white',
+    game.weapon1 === 'spear' ? 10 : 5
+  );
   drawText('SPEAR', 250, 525, 35, 'black', true);
 
-  drawRect(125, 600, 250, 100, 'lightBlue', 'white', game.weapon1 === 'unarmed' ? 10 : 5);
+  drawRect(
+    125,
+    600,
+    250,
+    100,
+    'lightBlue',
+    'white',
+    game.weapon1 === 'unarmed' ? 10 : 5
+  );
   drawText('UNARMED', 250, 650, 35, 'black', true);
 
   // Player 2
-  drawRect(625, 350, 250, 100, 'orange', 'white', game.weapon2 === 'sword' ? 10 : 5);
+  drawRect(
+    625,
+    350,
+    250,
+    100,
+    'orange',
+    'white',
+    game.weapon2 === 'sword' ? 10 : 5
+  );
   drawText('SWORD', 750, 400, 35, 'black', true);
 
-  drawRect(625, 475, 250, 100, 'orange', 'white', game.weapon2 === 'spear' ? 10 : 5);
+  drawRect(
+    625,
+    475,
+    250,
+    100,
+    'orange',
+    'white',
+    game.weapon2 === 'spear' ? 10 : 5
+  );
   drawText('SPEAR', 750, 525, 35, 'black', true);
 
-  drawRect(625, 600, 250, 100, 'orange', 'white', game.weapon2 === 'unarmed' ? 10 : 5);
+  drawRect(
+    625,
+    600,
+    250,
+    100,
+    'orange',
+    'white',
+    game.weapon2 === 'unarmed' ? 10 : 5
+  );
   drawText('UNARMED', 750, 650, 35, 'black', true);
 
   drawRect(375, 800, 250, 100, 'green', 'white', 5);
@@ -750,7 +798,12 @@ function update() {
       }
 
       const baseRot = game.weaponStats[game.weapon1].speed;
-      game.p1.rotSpeed = (game.p1.rotSpeed > 0 ? 1 : -1) * baseRot * game.p1.mult;
+      game.p1.rotSpeed =
+        (game.p1.rotSpeed > 0 ? 1 : -1) * baseRot * game.p1.mult;
+
+      // Reset chase/flee cooldowns on successful hit
+      game.p1.chaseCd = 0;
+      game.p1.fleeCd = 0;
     }
   }
 
@@ -803,7 +856,12 @@ function update() {
       }
 
       const baseRot = game.weaponStats[game.weapon2].speed;
-      game.p2.rotSpeed = (game.p2.rotSpeed > 0 ? 1 : -1) * baseRot * game.p2.mult;
+      game.p2.rotSpeed =
+        (game.p2.rotSpeed > 0 ? 1 : -1) * baseRot * game.p2.mult;
+
+      // Reset chase/flee cooldowns on successful hit
+      game.p2.chaseCd = 0;
+      game.p2.fleeCd = 0;
     }
   }
 
@@ -921,7 +979,7 @@ canvas.addEventListener('click', (e) => {
 
 function startGame() {
   game.state = 'playing';
-  
+
   if (game.weapon1 === 'unarmed') {
     game.p1.speed *= 0.5;
   }
