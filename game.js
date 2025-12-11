@@ -5,9 +5,8 @@ const SCALE = 2.5;
 const defaultRules = {
   startingHp: 100,
   baseDamage: 1,
+  startingMult: 1.0,
   multPerHit: 0.15,
-  speedPerHit: 0.5,
-  rotPerHit: 1.5,
   dashDamage: 5,
   slowDuration: 25,
   baseSpeed: 5.5,
@@ -113,36 +112,20 @@ function rulesConfig() {
       desc: 'Sword damage per tap',
     },
     {
+      id: 'startingMult',
+      label: 'Start Multiplier',
+      min: 0.5,
+      max: 3.0,
+      step: 0.1,
+      desc: 'Starting multiplier',
+    },
+    {
       id: 'multPerHit',
       label: 'Multiplier Gain',
       min: 0,
       max: 0.6,
       step: 0.05,
       desc: 'Multiplier gained per hit',
-    },
-    {
-      id: 'speedPerHit',
-      label: 'Speed Gain',
-      min: 0,
-      max: 2.5,
-      step: 0.1,
-      desc: 'Move speed gained per hit',
-    },
-    {
-      id: 'rotPerHit',
-      label: 'Spin Gain',
-      min: 0,
-      max: 5,
-      step: 0.25,
-      desc: 'Spin speed gained per hit',
-    },
-    {
-      id: 'dashDamage',
-      label: 'Dash Damage',
-      min: 0,
-      max: 20,
-      step: 1,
-      desc: 'Ram damage while dashing',
     },
     {
       id: 'slowDuration',
@@ -178,8 +161,8 @@ function adjustRule(id, delta) {
 function syncPlayersWithRules() {
   [game.p1, game.p2].forEach((p) => {
     p.hp = game.rules.startingHp;
-    p.speed = game.rules.baseSpeed;
-    p.mult = 1.0;
+    p.mult = game.rules.startingMult;
+    p.speed = game.rules.baseSpeed * p.mult;
   });
 }
 
@@ -248,12 +231,12 @@ function drawRules() {
   );
 
   const settings = rulesConfig();
-  const startY = 180;
+  const startY = 210;
   const rowH = 80;
 
   settings.forEach((s, i) => {
     const y = startY + i * rowH;
-    drawRect(120, y - 25, 760, 70, 'rgba(0,0,0,0.25)', 'white', 2);
+    drawRect(120, y - 25, 800, 70, 'rgba(0,0,0,0.25)', 'white', 2);
     drawText(s.label, 200, y - 5, 26, 'white', true, 'left');
     drawText(s.desc, 200, y + 25, 18, 'lightGray', false, 'left');
 
@@ -747,10 +730,10 @@ function update() {
     } else {
       game.p2.hp -= Math.floor(game.rules.baseDamage * game.p1.mult);
       game.p2.white = 10;
-      game.p1.speed += game.rules.speedPerHit;
-      game.p1.rotSpeed +=
-        game.p1.rotSpeed > 0 ? game.rules.rotPerHit : -game.rules.rotPerHit;
       game.p1.mult += game.rules.multPerHit;
+      game.p1.speed = game.rules.baseSpeed * game.p1.mult;
+      const baseRot = game.weaponStats[game.weapon1].speed;
+      game.p1.rotSpeed = (game.p1.rotSpeed > 0 ? 1 : -1) * baseRot * game.p1.mult;
     }
   }
 
@@ -774,10 +757,10 @@ function update() {
     } else {
       game.p1.hp -= Math.floor(game.rules.baseDamage * game.p2.mult);
       game.p1.white = 10;
-      game.p2.speed += game.rules.speedPerHit;
-      game.p2.rotSpeed +=
-        game.p2.rotSpeed > 0 ? game.rules.rotPerHit : -game.rules.rotPerHit;
       game.p2.mult += game.rules.multPerHit;
+      game.p2.speed = game.rules.baseSpeed * game.p2.mult;
+      const baseRot = game.weaponStats[game.weapon2].speed;
+      game.p2.rotSpeed = (game.p2.rotSpeed > 0 ? 1 : -1) * baseRot * game.p2.mult;
     }
   }
 
@@ -822,7 +805,7 @@ canvas.addEventListener('click', (e) => {
     }
 
     const settings = rulesConfig();
-    const startY = 180;
+    const startY = 210;
     const rowH = 80;
     settings.forEach((s, i) => {
       const yStart = startY + i * rowH - 25;
@@ -893,8 +876,8 @@ canvas.addEventListener('click', (e) => {
 
 function startGame() {
   game.state = 'playing';
-  game.p1.rotSpeed = game.weaponStats[game.weapon1].speed;
-  game.p2.rotSpeed = game.weaponStats[game.weapon2].speed;
+  game.p1.rotSpeed = game.weaponStats[game.weapon1].speed * game.p1.mult;
+  game.p2.rotSpeed = game.weaponStats[game.weapon2].speed * game.p2.mult;
 }
 
 function resetGame() {
@@ -910,11 +893,11 @@ function resetGame() {
     r: 25 * SCALE,
     vx: 0,
     vy: 0,
-    speed: game.rules.baseSpeed,
+    speed: game.rules.baseSpeed * game.rules.startingMult,
     angle: 0,
     rotSpeed: 0,
     hp: game.rules.startingHp,
-    mult: 1.0,
+    mult: game.rules.startingMult,
     white: 0,
     impactCd: 0,
     shieldAct: 0,
@@ -940,11 +923,11 @@ function resetGame() {
     r: 25 * SCALE,
     vx: 0,
     vy: 0,
-    speed: game.rules.baseSpeed,
+    speed: game.rules.baseSpeed * game.rules.startingMult,
     angle: 0,
     rotSpeed: 0,
     hp: game.rules.startingHp,
-    mult: 1.0,
+    mult: game.rules.startingMult,
     white: 0,
     impactCd: 0,
     shieldAct: 0,
