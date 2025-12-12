@@ -51,13 +51,13 @@ function drawStart() {
   drawText('SWORD BATTLE', 500, 300, 100, 'white', true);
   drawText('SELECT GAME MODE', 500, 450, 50, 'white', true);
   
-  // Player vs Player button
-  drawRect(200, 520, 250, 80, 'lightBlue', 'white', game.gameMode === 'pvp' ? 8 : 3);
-  drawText('PLAYER vs PLAYER', 325, 560, 28, 'black', true);
-  
-  // Player vs Computer button
-  drawRect(550, 520, 250, 80, 'lightGreen', 'white', game.gameMode === 'pvc' ? 8 : 3);
-  drawText('PLAYER vs COMPUTER', 675, 560, 28, 'black', true);
+  // Player vs Player button (wider so labels fit)
+  drawRect(200, 520, 320, 80, 'lightBlue', 'white', game.gameMode === 'pvp' ? 8 : 3);
+  drawText('PLAYER vs PLAYER', 360, 560, 22, 'black', true);
+
+  // Player vs Computer button (wider so labels fit)
+  drawRect(550, 520, 320, 80, 'lightGreen', 'white', game.gameMode === 'pvc' ? 8 : 3);
+  drawText('PLAYER vs COMPUTER', 710, 560, 22, 'black', true);
   
   drawText('Press SPACE to continue', 500, 700, 40, 'white');
 }
@@ -124,7 +124,7 @@ function drawWeaponSelect() {
   drawRect(
     125,
     350,
-    297,
+    250,
     100,
     'lightBlue',
     'white',
