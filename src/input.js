@@ -11,9 +11,9 @@ export function setupInput() {
 
     if (game.state === 'start') {
       // Handle game mode selection
-      if (200 <= x && x <= 450 && 520 <= y && y <= 600) {
+      if (200 <= x && x <= 520 && 520 <= y && y <= 600) {
         game.gameMode = 'pvp';
-      } else if (550 <= x && x <= 800 && 520 <= y && y <= 600) {
+      } else if (550 <= x && x <= 870 && 520 <= y && y <= 600) {
         game.gameMode = 'pvc';
       }
     } else if (game.state === 'rules') {
@@ -129,8 +129,10 @@ export function setupInput() {
 
       if (e.key === 'q') useAbility(game.p1, game.p2, game.ability1, true);
       else if (e.key === 'w') useAbility(game.p1, game.p2, game.ability1, false);
-      else if (e.key === 'o') useAbility(game.p2, game.p1, game.ability2, true);
-      else if (e.key === 'p') useAbility(game.p2, game.p1, game.ability2, false);
+      else if ((e.key === 'o' || e.key === 'p') && game.gameMode === 'pvp') {
+        if (e.key === 'o') useAbility(game.p2, game.p1, game.ability2, true);
+        else if (e.key === 'p') useAbility(game.p2, game.p1, game.ability2, false);
+      }
     } else if (game.state === 'playing' && game.winner && e.code === 'Space') {
       resetGame();
     }

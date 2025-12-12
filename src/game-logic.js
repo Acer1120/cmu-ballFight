@@ -1,5 +1,5 @@
 import { game } from './state.js';
-import { defaultRules, rulesConfig, SCALE } from './constants.js';
+import {rulesConfig, SCALE } from './constants.js';
 import { clamp } from './utils.js';
 
 export function syncPlayersWithRules() {
